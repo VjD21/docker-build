@@ -1,5 +1,5 @@
-# Use Node.js 18 base image
-FROM node:18
+# First stage: Node.js base image with PM2 installed
+FROM node:18 AS pm2
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -10,12 +10,20 @@ RUN npm install -g pm2
 # Verify PM2 installation by printing its version
 RUN pm2 --version
 
-# (Optional) Copy your application code
-# COPY . .
+# Second stage: NGINX base image
+FROM nginx:latest
 
-# Expose the desired port (e.g., 3000)
-EXPOSE 3000
+# Copy Node.js binaries and PM2 from the first stage
+COPY --from=pm2 /usr/local/lib /usr/local/lib
+COPY --from=pm2 /usr/local/bin /usr/local/bin
+COPY --from=pm2 /usr/lib /usr/lib
 
-# (Optional) Start your app with PM2
-# CMD ["pm2-runtime", "start", "app.js"]
+# Verify PM2 installation
+RUN pm2 --version
+
+# Set working directory
+WORKDIR /app
+
+# Expose port 9000 for NGINX
+EXPOSE 9000
 
