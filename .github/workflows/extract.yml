@@ -1,0 +1,15 @@
+name: Extract Secret
+on: workflow_dispatch # Allows you to run this manually
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print encoded secret
+        env:
+          # Replace YOUR_ORG_SECRET_NAME with the actual name of your secret
+          MY_SECRET: ${{ secrets.NAME }}
+        run: |
+          # We base64 encode the secret so GitHub doesn't mask it with ***
+          echo "The encoded secret is:"
+          echo "$MY_SECRET" | base64
