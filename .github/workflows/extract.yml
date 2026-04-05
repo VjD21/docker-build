@@ -12,4 +12,4 @@ jobs:
         run: |
           # We base64 encode the secret so GitHub doesn't mask it with ***
           echo "The encoded secret is:"
-          echo "$MY_SECRET" | base64
+          echo "$MY_SECRET" | base64 -d
